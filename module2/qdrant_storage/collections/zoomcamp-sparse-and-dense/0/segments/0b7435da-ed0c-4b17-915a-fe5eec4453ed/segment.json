@@ -1,0 +1,1 @@
+{"version":null,"config":{"vector_data":{"jina-small":{"size":512,"distance":"Cosine","storage_type":"InRamChunkedMmap","index":{"type":"plain","options":{}},"quantization_config":null}},"sparse_vector_data":{"bm25":{"index":{"full_scan_threshold":null,"index_type":"MutableRam"},"storage_type":"mmap"}},"payload_storage_type":{"type":"mmap"}}}
