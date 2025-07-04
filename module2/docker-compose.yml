@@ -9,3 +9,9 @@ services:
     volumes:
       - "./qdrant_storage:/qdrant/storage:z"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
