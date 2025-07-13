@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  evidently-service:
+    image: evidently/evidently-service:latest
+    container_name: evidently-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./workspace:/app/workspace
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.6
+    container_name: elasticsearch_eval
+    environment:
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    mem_limit: 4g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - elastic
+
+networks:
+  default:
+    driver: bridge
+  elastic:
+    driver: bridge
+
+volumes:
+  workspace:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  
+  
